@@ -266,9 +266,4 @@ Restricted to users with `admin` role:
 
 ---
 
-## 📄 License
-
-This project is built for the Diet with AI platform. All rights reserved.
-
----
 
