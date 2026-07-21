@@ -272,6 +272,3 @@ This project is built for the Diet with AI platform. All rights reserved.
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue or PR for any improvements.
