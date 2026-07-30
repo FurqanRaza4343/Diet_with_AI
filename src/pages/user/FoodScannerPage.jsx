@@ -62,13 +62,7 @@ const FoodScannerPage = () => {
       }
       if (res.success) { setResult(res.data); toast.success('Analysis complete!'); fetchHistory(); }
     } catch (err) {
-      const msg = err.message || 'Analysis failed';
-      if (msg.includes('does not appear to contain food')) {
-        toast.error(msg);
-        setShowTextInput(true);
-      } else {
-        toast.error(msg);
-      }
+      toast.error(err.message || 'Analysis failed');
     }
     finally { setAnalyzing(false); }
   };

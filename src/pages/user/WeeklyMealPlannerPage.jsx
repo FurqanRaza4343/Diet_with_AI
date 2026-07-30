@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { mealService } from '../../services/mealService';
 import { groceryService } from '../../services/groceryService';
-import client from '../../lib/insforge';
 import toast from 'react-hot-toast';
 import { FaCalendarPlus, FaTrash, FaDownload, FaPrint, FaShoppingBag, FaEye, FaTimes } from 'react-icons/fa';
 
@@ -70,11 +69,10 @@ const WeeklyMealPlannerPage = () => {
         price: i.price || 0,
       }])).values()];
       if (unique.length === 0) { toast.error('No ingredients found in this plan'); return; }
-      await client.database.from('grocery_lists').insert([{
-        user_id: userId,
+      await groceryService.createGroceryList({
         name: `Grocery from ${new Date(plan.weekStart).toLocaleDateString()} week plan`,
         items: unique.map(i => ({ ...i, isChecked: false })),
-      }]);
+      });
       toast.success('Grocery list generated from weekly plan!');
       fetchWeeklyPlans();
     } catch (error) { toast.error('Failed to generate grocery list'); }
