@@ -81,8 +81,8 @@ async function analyzeFoodText(foodName: string, language: string): Promise<any>
   const data = await groqFetch({
     model: 'llama-3.3-70b-versatile',
     messages: [
-      { role: 'system', content: 'Nutrition analyst. Return valid JSON.' },
-      { role: 'user', content: `JSON for "${foodName}": foodName, calories, protein, carbs, fat, fiber, sugar, healthScore, ingredients[], warnings[], recommendations[], voiceResponse (${language || 'English'})` },
+      { role: 'system', content: `Nutrition analyst. Respond in ${language || 'English'}. Return valid JSON.` },
+      { role: 'user', content: `Nutrition info for "${foodName}": foodName, calories, protein, carbs, fat, fiber, sugar, healthScore (1-100), ingredients[], warnings[], recommendations[], voiceResponse (${language || 'English'})` },
     ],
     response_format: { type: 'json_object' },
     temperature: 0.1,
