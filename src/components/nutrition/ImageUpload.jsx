@@ -69,7 +69,12 @@ const ImageUpload = ({ onImageUpload, isLoading }) => {
         }`}
       >
         {preview ? (
-          <div className="space-y-4">
+          <div className="space-y-4 relative">
+            {isLoading && (
+              <div className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center z-10">
+                <div className="text-white text-center"><div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2"></div><p className="text-sm">Analyzing...</p></div>
+              </div>
+            )}
             <img
               src={preview}
               alt="Food preview"
@@ -78,9 +83,10 @@ const ImageUpload = ({ onImageUpload, isLoading }) => {
             <p className="text-sm text-text-muted">{fileName}</p>
             <button
               onClick={handleClear}
-              className="text-danger hover:text-danger/80 text-sm transition-colors flex items-center gap-1 mx-auto"
+              disabled={isLoading}
+              className="text-danger hover:text-danger/80 text-sm transition-colors flex items-center gap-1 mx-auto disabled:opacity-50"
             >
-              <FaTimes /> Remove image
+              <FaTimes /> {isLoading ? 'Analyzing...' : 'Remove image'}
             </button>
           </div>
         ) : (
