@@ -92,7 +92,13 @@ const MealHistoryPage = () => {
                     <p className="text-sm text-on-surface-variant">{plan.meals?.length || 0} meals · {plan.totalCalories || 0} kcal total</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="px-3 py-1.5 rounded-xl text-xs font-medium bg-[#f6f3f4] text-on-surface hover:bg-[#e5e1e3] transition-colors"><FaDownload /></button>
+                    <button onClick={() => {
+                      const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement('a');
+                      a.href = url; a.download = `meal-plan-${plan.date}.json`;
+                      a.click(); URL.revokeObjectURL(url);
+                    }} className="px-3 py-1.5 rounded-xl text-xs font-medium bg-[#f6f3f4] text-on-surface hover:bg-[#e5e1e3] transition-colors"><FaDownload /></button>
                     <button onClick={() => handleDelete(plan.id)} className="px-3 py-1.5 rounded-xl text-xs font-medium bg-red-50 text-red-600 hover:bg-red-100 transition-colors"><FaTrash /></button>
                   </div>
                 </div>

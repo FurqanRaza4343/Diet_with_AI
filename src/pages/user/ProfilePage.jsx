@@ -24,7 +24,7 @@ const ProfilePage = () => {
   }, [user]);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleArrayChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value.split(',').map(item => item.trim()) });
+  const handleArrayChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value.split(',').map(item => item.trim()).filter(Boolean) });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -27,11 +27,8 @@ const UserManagementPage = () => {
     try {
       const { error } = await client.auth.admin.updateUserById(userId, { user_metadata: { role: newRole } });
       if (error) throw error;
-      if (newRole === 'admin') {
-        await client.database.from('profiles').update({ goal: 'admin' }).eq('id', userId);
-      } else {
-        await client.database.from('profiles').update({ goal: 'maintain' }).eq('id', userId);
-      }
+      const { error: profileError } = await client.database.from('profiles').update({ role: newRole }).eq('id', userId);
+      if (profileError) throw profileError;
       toast.success('User role updated');
       fetchUsers();
     } catch (error) {

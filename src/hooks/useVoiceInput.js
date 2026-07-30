@@ -4,6 +4,7 @@ export const useVoiceInput = (language = 'en') => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState(null);
+  const [isSupported, setIsSupported] = useState(false);
   const recognitionRef = useRef(null);
 
   const langMap = {
@@ -20,6 +21,7 @@ export const useVoiceInput = (language = 'en') => {
 
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      setIsSupported(true);
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
       recognition.lang = langMap[language] || 'en-US';
@@ -55,6 +57,7 @@ export const useVoiceInput = (language = 'en') => {
 
       recognitionRef.current = recognition;
     } else {
+      setIsSupported(false);
       setError('Voice recognition not supported in this browser');
     }
 
@@ -79,7 +82,7 @@ export const useVoiceInput = (language = 'en') => {
     }
   }, []);
 
-  const isSupported = !!recognitionRef.current;
+
 
   return {
     isRecording,

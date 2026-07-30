@@ -99,17 +99,14 @@ export const authService = {
   changePassword: async ({ currentPassword, newPassword }) => {
     const { data: { user } } = await client.auth.getCurrentUser();
     if (!user?.email) throw new Error('Not authenticated');
-    const { error } = await client.auth.signInWithPassword({
+    const { error: signInError } = await client.auth.signInWithPassword({
       email: user.email,
       password: currentPassword,
     });
-    if (error) throw new Error('Current password is incorrect');
-    const { error: resetError } = await client.auth.sendResetPasswordEmail({
-      email: user.email,
-      redirectTo: `${import.meta.env.VITE_DEPLOY_URL || window.location.origin}/reset-password`,
-    });
-    if (resetError) throw resetError;
-    return { success: true, message: 'Password reset email sent. Check your inbox.' };
+    if (signInError) throw new Error('Current password is incorrect');
+    const { error: updateError } = await client.auth.updateUser({ password: newPassword });
+    if (updateError) throw updateError;
+    return { success: true, message: 'Password changed successfully.' };
   },
 
   forgotPassword: async (email) => {

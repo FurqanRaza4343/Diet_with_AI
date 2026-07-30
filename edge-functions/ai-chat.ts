@@ -6,6 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
 export default async function (req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
   if (req.method !== 'POST') {
@@ -50,26 +52,26 @@ Keep responses concise, factual, and helpful (2-4 paragraphs max). Never give me
   ];
 
   try {
-    const mistralRes = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    const groqRes = await fetch(GROQ_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Deno.env.get('MISTRAL_API_KEY')}`,
+        'Authorization': `Bearer ${Deno.env.get('GROQ_API_KEY')}`,
       },
       body: JSON.stringify({
-        model: 'mistral-large-latest',
+        model: 'llama-3.3-70b-versatile',
         messages,
         temperature: 0.7,
         max_tokens: 800,
       }),
     });
 
-    const mistralData = await mistralRes.json();
-    if (!mistralRes.ok) {
-      throw new Error(mistralData.error?.message || 'Mistral API error');
+    const groqData = await groqRes.json();
+    if (!groqRes.ok) {
+      throw new Error(groqData.error?.message || 'Groq API error');
     }
 
-    const response = mistralData.choices?.[0]?.message?.content || 'I apologize, I could not process that request. Please try again.';
+    const response = groqData.choices?.[0]?.message?.content || 'I apologize, I could not process that request. Please try again.';
 
     return new Response(JSON.stringify({ response }), {
       status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },

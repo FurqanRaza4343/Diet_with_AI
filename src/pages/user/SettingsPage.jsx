@@ -106,7 +106,7 @@ const SettingsPage = () => {
                 try {
                   await client.database.from('profiles').update({ language: val }).eq('id', user.id);
                   if (setUser) setUser({ ...user, language: val });
-                } catch { /* silent */ }
+                } catch { toast.error('Failed to update language'); }
                 setSavingSettings(false);
               }} className="w-[200px] px-3 py-2.5 bg-[#f6f3f4] border border-[#e5e1e3] rounded-xl text-on-surface focus:ring-2 focus:ring-primary-300 focus:border-primary-300 outline-none transition-all">
                 <option value="en">🇬🇧 English</option>
@@ -129,7 +129,7 @@ const SettingsPage = () => {
                 try {
                   await client.database.from('profiles').update({ notifications: val }).eq('id', user.id);
                   if (setUser) setUser({ ...user, notifications: val });
-                } catch { /* silent */ }
+                } catch { toast.error('Failed to update notifications'); }
               }} className={`w-11 h-6 rounded-full transition-colors relative ${settings.notifications ? 'bg-primary-500' : 'bg-[#e5e1e3]'}`}>
                 <span className={`block w-5 h-5 rounded-full bg-white shadow-sm transition-transform absolute top-0.5 ${settings.notifications ? 'left-[22px]' : 'left-0.5'}`} />
               </button>
@@ -146,7 +146,7 @@ const SettingsPage = () => {
                 try {
                   await client.database.from('profiles').update({ email_updates: val }).eq('id', user.id);
                   if (setUser) setUser({ ...user, email_updates: val });
-                } catch { /* silent */ }
+                } catch { toast.error('Failed to update email preferences'); }
               }} className={`w-11 h-6 rounded-full transition-colors relative ${settings.emailUpdates ? 'bg-primary-500' : 'bg-[#e5e1e3]'}`}>
                 <span className={`block w-5 h-5 rounded-full bg-white shadow-sm transition-transform absolute top-0.5 ${settings.emailUpdates ? 'left-[22px]' : 'left-0.5'}`} />
               </button>

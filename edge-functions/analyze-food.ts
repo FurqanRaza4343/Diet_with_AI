@@ -6,6 +6,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
 
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
 export default async function (req: Request): Promise<Response> {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
   if (req.method !== 'POST') {
@@ -60,30 +62,31 @@ export default async function (req: Request): Promise<Response> {
 Use realistic nutritional values. For a single food item, estimate per serving. For a meal, estimate the full meal. Be accurate and scientific.`;
 
   try {
-    const mistralRes = await fetch('https://api.mistral.ai/v1/chat/completions', {
+    const groqRes = await fetch(GROQ_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${Deno.env.get('MISTRAL_API_KEY')}`,
+        'Authorization': `Bearer ${Deno.env.get('GROQ_API_KEY')}`,
       },
       body: JSON.stringify({
-        model: 'mistral-large-latest',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Analyze this food: ${text}` },
         ],
         response_format: { type: 'json_object' },
         temperature: 0.3,
+        max_tokens: 500,
       }),
     });
 
-    const mistralData = await mistralRes.json();
-    if (!mistralRes.ok) {
-      throw new Error(mistralData.error?.message || 'Mistral API error');
+    const groqData = await groqRes.json();
+    if (!groqRes.ok) {
+      throw new Error(groqData.error?.message || 'Groq API error');
     }
 
-    const content = mistralData.choices?.[0]?.message?.content;
-    if (!content) throw new Error('Empty response from Mistral');
+    const content = groqData.choices?.[0]?.message?.content;
+    if (!content) throw new Error('Empty response from Groq');
 
     const analysis = JSON.parse(content);
 
