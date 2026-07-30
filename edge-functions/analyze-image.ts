@@ -28,6 +28,8 @@ async function imageUrlToBase64(imageUrl: string): Promise<string> {
   const resp = await fetch(imageUrl);
   if (!resp.ok) throw new Error(`Failed to fetch image: ${resp.status}`);
   const blob = await resp.arrayBuffer();
+  const sizeMB = blob.byteLength / (1024 * 1024);
+  if (sizeMB > 3) throw new Error(`Image too large (${sizeMB.toFixed(1)}MB). Max 3MB.`);
   const ct = resp.headers.get('content-type') || 'image/jpeg';
   return `data:${ct};base64,${btoa(String.fromCharCode(...new Uint8Array(blob)))}`;
 }

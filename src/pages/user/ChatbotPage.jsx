@@ -36,6 +36,7 @@ const ChatbotPage = () => {
       if (error) throw error;
       setMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'assistant', text: data.response || data.message || 'Got it!', timestamp: new Date() }]);
     } catch {
+      toast.error('AI service unavailable, using local responses');
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(), role: 'assistant',
         text: getFallbackResponse(userMsg),
